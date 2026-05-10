@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- MOBILE GOLD BORDER VERSION -->
 <title>ตารางเปิดรับสมัคร | ศูนย์ฝึกอาชีพจตุจักร</title>
+<!-- SMART REGISTER STATUS VERSION: booking-right wording + insight layer -->
 <!-- READY: Smooth Google Sheet sync + Sao Chingcha font stack -->
 <style>
 :root {
@@ -516,6 +518,110 @@ small {
   }
 }
 
+
+/* === SMART REGISTER STATUS LAYER === */
+.process-note{
+  margin:14px 0 12px;
+  padding:13px 15px;
+  border-radius:18px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-size:13px;
+  font-weight:800;
+  line-height:1.55;
+  box-shadow:0 4px 14px rgba(0,0,0,.035);
+}
+.smart-insights{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:12px 0 16px;
+}
+.smart-insight{
+  background:#fff;
+  border-radius:20px;
+  padding:13px 14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
+  border:1px solid rgba(0,92,70,.08);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.smart-insight .label{
+  font-size:13px;
+  font-weight:900;
+  color:var(--muted);
+  line-height:1.35;
+}
+.smart-insight strong{
+  font-size:25px;
+  color:var(--bma);
+  line-height:1;
+}
+.smart-insight.near strong{color:#ea580c}
+.smart-insight.open strong{color:#16a34a}
+.smart-insight.full strong{color:#dc2626}
+.status-bar .status-text{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.card-process-note{
+  margin:0 15px 15px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:#f8fafc;
+  color:#64748b;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.45;
+  border:1px solid #e2e8f0;
+}
+@media(max-width:720px){
+  .smart-insights{grid-template-columns:1fr}
+  .process-note{font-size:12px}
+}
+
+
+/* === MOBILE GOLD BORDER UX IMPROVEMENT === */
+@media(max-width:720px){
+
+  .card,
+  .course-card,
+  .kpi,
+  .smart-insight,
+  .process-note{
+    border:1.5px solid rgba(212,175,55,.34) !important;
+    box-shadow:
+      0 10px 24px rgba(0,0,0,.055),
+      0 0 0 1px rgba(255,255,255,.45) inset !important;
+  }
+
+  .grid,
+  .cards-grid,
+  .courses-grid{
+    gap:16px !important;
+  }
+
+  .card{
+    overflow:hidden;
+    backdrop-filter:blur(2px);
+  }
+
+  .status-bar,
+  .status,
+  .badge{
+    border:1px solid rgba(212,175,55,.18);
+  }
+
+  .num-box,
+  .num{
+    border:1px solid rgba(212,175,55,.20) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -548,9 +654,9 @@ small {
     <input id="search" class="search" type="search" placeholder="🔍 ค้นหาวิชา เช่น นวดไทย / คอมพิวเตอร์ / เสริมสวย">
     <select id="statusFilter" class="select">
       <option value="all">ทุกสถานะ</option>
-      <option value="ok">สมัครได้</option>
-      <option value="near">ใกล้เต็ม</option>
-      <option value="full">เต็มแล้ว</option>
+      <option value="ok">เปิดรับสมัคร</option>
+      <option value="near">มีผู้สมัครจำนวนมาก</option>
+      <option value="full">มีผู้สมัครครบตามจำนวน</option>
     </select>
   </section>
 
@@ -562,16 +668,16 @@ small {
   <section class="kpis">
     <div class="kpi"><strong id="kpiCourses">0</strong><span>วิชาที่แสดง</span></div>
     <div class="kpi"><strong id="kpiCap">0</strong><span>จำนวนรับรวม</span></div>
-    <div class="kpi"><strong id="kpiReg">0</strong><span>สมัครแล้วรวม</span></div>
-    <div class="kpi"><strong id="kpiLeft">0</strong><span>คงเหลือรวม</span></div>
+    <div class="kpi"><strong id="kpiReg">0</strong><span>สมัครเข้ามาในระบบจำนวน</span></div>
+    <div class="kpi"><strong id="kpiLeft">0</strong><span>สิทธิ์คงเหลือรวม</span></div>
   </section>
 
   <section class="section">
     <h2>📌 สถานะรายวิชา</h2>
     <div class="legend">
-      <span><i class="dot green"></i> สมัครได้</span>
-      <span><i class="dot orange"></i> ใกล้เต็ม</span>
-      <span><i class="dot red"></i> เต็มแล้ว</span>
+      <span><i class="dot green"></i> เปิดรับสมัคร</span>
+      <span><i class="dot orange"></i> มีผู้สมัครจำนวนมาก</span>
+      <span><i class="dot red"></i> มีผู้สมัครครบตามจำนวน</span>
       <button class="refresh-btn" id="refreshBtn">↻ รีเฟรช</button>
     </div>
   </section>
@@ -629,11 +735,11 @@ function getStatus(row){
   const raw = text(row.status ?? row["สถานะ"]);
   const pct = cap > 0 ? (reg / cap) * 100 : 0;
 
-  if(raw.includes("เต็ม") && !raw.includes("ใกล้")) return {key:"full", label:"เต็มแล้ว"};
-  if(raw.includes("ใกล้")) return {key:"near", label:"ใกล้เต็ม"};
-  if(left <= 0 || pct >= 100) return {key:"full", label:"เต็มแล้ว"};
-  if(pct >= 80 || left <= 3) return {key:"near", label:"ใกล้เต็ม"};
-  return {key:"ok", label:"สมัครได้"};
+  if(raw.includes("เต็ม") && !raw.includes("ใกล้")) return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
+  if(raw.includes("ใกล้")) return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
+  if(left <= 0 || pct >= 100) return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
+  if(pct >= 80 || left <= 3) return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
+  return {key:"ok", label:"เปิดรับสมัคร"};
 }
 
 function normalizeRow(row){
@@ -762,10 +868,23 @@ function updateKpis(rows){
   const cap = rows.reduce((s,r)=>s+r.cap,0);
   const reg = rows.reduce((s,r)=>s+r.reg,0);
   const left = rows.reduce((s,r)=>s+r.left,0);
+
+  const near = rows.filter(r => getStatus(r).key === "near").length;
+  const open = rows.filter(r => getStatus(r).key === "ok").length;
+  const full = rows.filter(r => getStatus(r).key === "full").length;
+
   document.getElementById("kpiCourses").textContent = rows.length;
   document.getElementById("kpiCap").textContent = cap;
   document.getElementById("kpiReg").textContent = reg;
   document.getElementById("kpiLeft").textContent = left;
+
+  const insightNear = document.getElementById("insightNear");
+  const insightOpen = document.getElementById("insightOpen");
+  const insightFull = document.getElementById("insightFull");
+
+  if(insightNear) insightNear.textContent = near;
+  if(insightOpen) insightOpen.textContent = open;
+  if(insightFull) insightFull.textContent = full;
 }
 
 function cardHtml(r){
@@ -792,13 +911,14 @@ function cardHtml(r){
       <div class="progress"><div style="width:${pct}%"></div></div>
       <div class="numbers">
         <div class="num-box"><strong>${r.cap}</strong><span>จำนวนรับ</span></div>
-        <div class="num-box"><strong>${r.reg}</strong><span>สมัครแล้ว</span></div>
-        <div class="num-box"><strong>${r.left}</strong><span>คงเหลือ</span></div>
+        <div class="num-box"><strong>${r.reg}</strong><span>สมัครเข้ามาในระบบ</span></div>
+        <div class="num-box"><strong>${r.left}</strong><span>สิทธิ์คงเหลือ</span></div>
       </div>
       <div class="status-bar">
-        <span>● ${st.label}</span>
+        <span class="status-text">● ${st.label}</span>
         <span>${pct}%</span>
       </div>
+      <div class="card-process-note">ข้อมูลเป็นจำนวนผู้สมัครผ่านระบบออนไลน์ และอาจมีการเปลี่ยนแปลงหลังการตรวจสอบและวันรายงานตัว</div>
       ${r.reserve ? `<div class="note">จำนวนสำรอง: ${r.reserve} คน</div>` : ""}
     </article>
   `;
