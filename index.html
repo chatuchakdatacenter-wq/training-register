@@ -166,9 +166,12 @@ body{
 .course-img{
   width:100%;
   aspect-ratio:16/9;
-  object-fit:cover;
+  object-fit:contain;
+  object-position:center center;
   display:block;
-  background:#dfeae5;
+  background:#ffffff;
+  padding:6px;
+  border-bottom:1px solid rgba(0,92,70,.08);
 }
 .no-img{
   width:100%;
@@ -459,6 +462,25 @@ h1,h2,h3,h4,h5,h6,
 strong,
 small {
   font-family:var(--bma-font-embedded) !important;
+}
+
+
+/* === COURSE POSTER SCALE FIX ===
+   ปรับรูปหลักสูตรให้เห็นโปสเตอร์/ใบหน้า/ข้อความครบ ไม่ถูก crop
+*/
+.card .course-img{
+  object-fit:contain !important;
+  object-position:center center !important;
+  background:#fff !important;
+  padding:6px !important;
+}
+
+.card{
+  background:#fff;
+}
+
+.no-img{
+  border-bottom:1px solid rgba(0,92,70,.08);
 }
 
 </style>
