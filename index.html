@@ -483,6 +483,39 @@ small {
   border-bottom:1px solid rgba(0,92,70,.08);
 }
 
+
+/* === MOBILE POSTER SCALE FIX ===
+   บังคับมือถือให้ใช้การย่อภาพแบบ contain เช่นเดียวกับคอม
+   ป้องกันภาพโปสเตอร์ถูกตัดหน้า/ตัดข้อความบน iPhone/Android
+*/
+@media(max-width:720px){
+  .card .course-img,
+  img.course-img{
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:16/9 !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    background:#fff !important;
+    padding:4px !important;
+    max-height:220px !important;
+  }
+
+  .card{
+    overflow:hidden !important;
+  }
+}
+
+@media(max-width:430px){
+  .card .course-img,
+  img.course-img{
+    aspect-ratio:4/3 !important;
+    object-fit:contain !important;
+    max-height:240px !important;
+    padding:4px !important;
+  }
+}
+
 </style>
 </head>
 <body>
