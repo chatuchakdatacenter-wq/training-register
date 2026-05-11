@@ -6,6 +6,7 @@
 <!-- MOBILE GOLD BORDER VERSION -->
 <title>ตารางเปิดรับสมัคร | ศูนย์ฝึกอาชีพจตุจักร</title>
 <!-- SMART REGISTER STATUS VERSION: booking-right wording + insight layer -->
+<!-- HOTFIX: statusFilter ok/near/full/overflow + animated progress bar -->
 <!-- READY: Smooth Google Sheet sync + Sao Chingcha font stack -->
 <style>
 :root {
@@ -622,6 +623,65 @@ small {
   }
 }
 
+
+
+/* === SMART STATUS OVERFLOW + ANIMATED PROGRESS PATCH === */
+.dot.purple{background:#7c3aed}
+.card.status-overflow .card-head{border-top-color:#7c3aed}
+.status-overflow .status-bar{background:#ede9fe;color:#5b21b6}
+.status-overflow .progress > div{background:#7c3aed}
+
+.progress{
+  position:relative;
+  overflow:hidden;
+}
+.progress > div{
+  position:relative;
+  transition:width .6s ease;
+}
+.progress > div::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-40%;
+  width:40%;
+  height:100%;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.45) 50%,rgba(255,255,255,0) 100%);
+  animation:progressShine 2.2s linear infinite;
+}
+.status-near .progress{
+  animation:nearPulse 1.8s ease-in-out infinite;
+}
+.status-full .progress > div::after{
+  animation:none;
+}
+.status-overflow .progress{
+  box-shadow:0 0 10px rgba(124,58,237,.35),0 0 18px rgba(124,58,237,.18);
+}
+.status-overflow .progress > div::after{
+  animation:overflowMove 1s linear infinite;
+}
+@keyframes progressShine{
+  0%{left:-40%}
+  100%{left:120%}
+}
+@keyframes nearPulse{
+  0%,100%{transform:scaleY(1);opacity:1}
+  50%{transform:scaleY(1.08);opacity:.92}
+}
+@keyframes overflowMove{
+  0%{left:-30%}
+  100%{left:120%}
+}
+@media (prefers-reduced-motion: reduce){
+  .progress > div,
+  .progress > div::after,
+  .status-near .progress,
+  .status-overflow .progress > div::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -657,6 +717,7 @@ small {
       <option value="ok">เปิดรับสมัคร</option>
       <option value="near">มีผู้สมัครจำนวนมาก</option>
       <option value="full">มีผู้สมัครครบตามจำนวน</option>
+      <option value="overflow">สมัครเกินจำนวน</option>
     </select>
   </section>
 
@@ -669,7 +730,7 @@ small {
     <div class="kpi"><strong id="kpiCourses">0</strong><span>วิชาที่แสดง</span></div>
     <div class="kpi"><strong id="kpiCap">0</strong><span>จำนวนรับรวม</span></div>
     <div class="kpi"><strong id="kpiReg">0</strong><span>สมัครเข้ามาในระบบจำนวน</span></div>
-    <div class="kpi"><strong id="kpiLeft">0</strong><span>สิทธิ์คงเหลือรวม</span></div>
+    <div class="kpi"><strong id="kpiLeft">0</strong><span>ที่นั่งคงเหลือรวม</span></div>
   </section>
 
   <section class="section">
@@ -678,6 +739,7 @@ small {
       <span><i class="dot green"></i> เปิดรับสมัคร</span>
       <span><i class="dot orange"></i> มีผู้สมัครจำนวนมาก</span>
       <span><i class="dot red"></i> มีผู้สมัครครบตามจำนวน</span>
+      <span><i class="dot purple"></i> สมัครเกินจำนวน</span>
       <button class="refresh-btn" id="refreshBtn">↻ รีเฟรช</button>
     </div>
   </section>
@@ -728,20 +790,45 @@ function getLeft(row){
   return Math.max(0, n(row.cap ?? row["จำนวนที่รับ"]) - n(row.reg ?? row["สมัครแล้ว"]));
 }
 
+function getOverflow(row){
+  const cap = n(row.cap ?? row["จำนวนที่รับ"]);
+  const reg = n(row.reg ?? row["สมัครแล้ว"]);
+  return Math.max(0, reg - cap);
+}
+
+function getSeatMetric(row){
+  const overflow = getOverflow(row);
+  if(overflow > 0){
+    return {value: overflow, label: "เกินยอดรับ", className: "metric-overflow"};
+  }
+  return {value: getLeft(row), label: "ที่นั่งคงเหลือ", className: "metric-left"};
+}
+
 function getStatus(row){
   const cap = n(row.cap ?? row["จำนวนที่รับ"]);
   const reg = n(row.reg ?? row["สมัครแล้ว"]);
   const left = getLeft(row);
-  const raw = text(row.status ?? row["สถานะ"]);
+  const raw = text(row.status ?? row["สถานะ"]).replace(/\s+/g,"");
+  const rawLower = raw.toLowerCase();
   const pct = cap > 0 ? (reg / cap) * 100 : 0;
 
-  if(raw.includes("เต็ม") && !raw.includes("ใกล้")) return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
-  if(raw.includes("ใกล้")) return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
-  if(left <= 0 || pct >= 100) return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
-  if(pct >= 80 || left <= 3) return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
+  // สมัครเกินจำนวน: ต้องมาก่อน FULL เสมอ เพื่อไม่ให้ถูกจัดเป็น "เต็ม" ธรรมดา
+  if((cap > 0 && reg > cap) || raw.includes("เกิน") || rawLower.includes("overflow")){
+    return {key:"overflow", label:"สมัครเกินจำนวน"};
+  }
+
+  // ครบตามจำนวน / เต็ม
+  if(left <= 0 || pct >= 100 || raw.includes("เต็ม") || raw.includes("ครบ") || rawLower.includes("full")){
+    return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
+  }
+
+  // มีผู้สมัครจำนวนมาก / ใกล้เต็ม
+  if(raw.includes("ใกล้") || raw.includes("จำนวนมาก") || raw.includes("เกือบเต็ม") || rawLower.includes("near") || pct >= 80 || (left > 0 && left <= 3)){
+    return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
+  }
+
   return {key:"ok", label:"เปิดรับสมัคร"};
 }
-
 function normalizeRow(row){
   return {
     subject: text(row.subject ?? row["วิชา"] ?? row["ชื่อวิชา"]),
@@ -753,6 +840,7 @@ function normalizeRow(row){
     reg: n(row.reg ?? row["สมัครแล้ว"]),
     reserve: n(row.reserve ?? row["สำรอง"]),
     left: getLeft(row),
+    status: text(row.status ?? row["สถานะ"]),
     image: text(row.image ?? row.img ?? row["รูปภาพ"])
   };
 }
@@ -872,6 +960,7 @@ function updateKpis(rows){
   const near = rows.filter(r => getStatus(r).key === "near").length;
   const open = rows.filter(r => getStatus(r).key === "ok").length;
   const full = rows.filter(r => getStatus(r).key === "full").length;
+  const overflow = rows.filter(r => getStatus(r).key === "overflow").length;
 
   document.getElementById("kpiCourses").textContent = rows.length;
   document.getElementById("kpiCap").textContent = cap;
@@ -881,15 +970,19 @@ function updateKpis(rows){
   const insightNear = document.getElementById("insightNear");
   const insightOpen = document.getElementById("insightOpen");
   const insightFull = document.getElementById("insightFull");
+  const insightOverflow = document.getElementById("insightOverflow");
 
   if(insightNear) insightNear.textContent = near;
   if(insightOpen) insightOpen.textContent = open;
   if(insightFull) insightFull.textContent = full;
+  if(insightOverflow) insightOverflow.textContent = overflow;
 }
 
 function cardHtml(r){
   const st = getStatus(r);
-  const pct = r.cap > 0 ? Math.min(100, Math.round((r.reg / r.cap) * 100)) : 0;
+  const pctActual = r.cap > 0 ? Math.round((r.reg / r.cap) * 100) : 0;
+  const pctBar = Math.min(100, pctActual);
+  const seatMetric = getSeatMetric(r);
   const img = r.image
     ? `<img class="course-img" loading="lazy" src="${escapeAttr(r.image)}" alt="${escapeAttr(r.subject)}" onerror="this.outerHTML='<div class=&quot;no-img&quot;>ไม่มีรูปภาพ</div>'">`
     : `<div class="no-img">ศูนย์ฝึกอาชีพ<br>เขตจตุจักร</div>`;
@@ -908,15 +1001,15 @@ function cardHtml(r){
           ${r.learnDate ? `ช่วงเวลาเรียน: ${escapeHtml(r.learnDate)}` : ""}
         </div>
       </div>
-      <div class="progress"><div style="width:${pct}%"></div></div>
+      <div class="progress"><div style="width:${pctBar}%"></div></div>
       <div class="numbers">
         <div class="num-box"><strong>${r.cap}</strong><span>จำนวนรับ</span></div>
         <div class="num-box"><strong>${r.reg}</strong><span>สมัครเข้ามาในระบบ</span></div>
-        <div class="num-box"><strong>${r.left}</strong><span>สิทธิ์คงเหลือ</span></div>
+        <div class="num-box ${seatMetric.className}"><strong>${seatMetric.value}</strong><span>${seatMetric.label}</span></div>
       </div>
       <div class="status-bar">
         <span class="status-text">● ${st.label}</span>
-        <span>${pct}%</span>
+        <span>${pctActual}%</span>
       </div>
       <div class="card-process-note">ข้อมูลเป็นจำนวนผู้สมัครผ่านระบบออนไลน์ และอาจมีการเปลี่ยนแปลงหลังการตรวจสอบและวันรายงานตัว</div>
       ${r.reserve ? `<div class="note">จำนวนสำรอง: ${r.reserve} คน</div>` : ""}
