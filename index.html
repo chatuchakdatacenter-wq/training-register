@@ -6,7 +6,7 @@
 <!-- MOBILE GOLD BORDER VERSION -->
 <title>ตารางเปิดรับสมัคร | ศูนย์ฝึกอาชีพจตุจักร</title>
 <!-- SMART REGISTER STATUS VERSION: booking-right wording + insight layer -->
-<!-- OFFICIAL: strict status logic + synced donut overview + single soft pulse open status -->
+<!-- OFFICIAL: strict status logic + synced donut overview + manual form override -->
 <!-- READY: Smooth Google Sheet sync + Sao Chingcha font stack -->
 <style>
 :root {
@@ -270,6 +270,19 @@ body{
   cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
+
+.global-process-note{
+  margin:14px 0 18px;
+  padding:12px 16px;
+  border-radius:16px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#475569;
+  font-size:13px;
+  line-height:1.6;
+  box-shadow:0 4px 14px rgba(0,0,0,.03);
+}
+
 @media(max-width:720px){
   body{padding:12px}
   .hero{border-radius:24px;padding:18px}
@@ -1037,6 +1050,249 @@ small {
   }
 }
 
+
+/* === COURSE STATE + FORM URL SYSTEM === */
+.card.status-preparing .card-head{border-top-color:#6b7280}
+.card.status-closed .card-head{border-top-color:#374151}
+.card.status-overflow .card-head{border-top-color:#7c3aed}
+
+.status-preparing .status-bar{background:#f3f4f6;color:#374151}
+.status-closed .status-bar{background:#e5e7eb;color:#111827}
+.status-overflow .status-bar{background:#ede9fe;color:#5b21b6}
+
+.apply-wrap{padding:0 15px 16px}
+
+.apply-btn{
+width:100%;
+border:none;
+border-radius:16px;
+padding:14px 16px;
+font-size:15px;
+font-weight:900;
+cursor:pointer;
+transition:.18s ease;
+text-decoration:none;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+}
+
+.apply-btn.open{
+background:linear-gradient(135deg,var(--bma),var(--bma2));
+color:#fff;
+}
+
+.apply-btn.disabled{
+background:#e5e7eb;
+color:#6b7280;
+cursor:not-allowed;
+}
+
+.apply-btn.full{
+background:#fee2e2;
+color:#991b1b;
+}
+
+.apply-btn.reserve{
+background:#ede9fe;
+color:#5b21b6;
+}
+
+
+/* === APPLY BUTTON FORCE RENDER PATCH === */
+.apply-wrap{
+  padding:0 15px 16px !important;
+}
+
+.apply-btn{
+  width:100%;
+  min-height:46px;
+  border:none;
+  border-radius:16px;
+  padding:13px 14px;
+  font-size:15px;
+  font-weight:900;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.04);
+}
+
+.apply-btn.open{
+  background:linear-gradient(135deg,var(--bma),var(--bma2));
+  color:#fff;
+}
+
+.apply-btn.disabled{
+  background:#e5e7eb;
+  color:#6b7280;
+  cursor:not-allowed;
+}
+
+.apply-btn.full{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.apply-btn.reserve{
+  background:#ede9fe;
+  color:#5b21b6;
+}
+
+
+/* === MASTER COURSE STATE + SUB STATUS PATCH === */
+.status-subline{
+  margin:0 15px 12px;
+  border-radius:14px;
+  padding:9px 12px;
+  font-size:13px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  background:#f8fafc;
+  color:#475569;
+  border:1px solid #e2e8f0;
+}
+.status-subline.near{
+  background:#fff7ed;
+  color:#9a3412;
+  border-color:#fed7aa;
+}
+.status-subline.full{
+  background:#fef2f2;
+  color:#991b1b;
+  border-color:#fecaca;
+}
+.status-subline.overflow{
+  background:#f5f3ff;
+  color:#5b21b6;
+  border-color:#ddd6fe;
+}
+.status-subline.is-hidden{
+  display:none;
+}
+
+.card.status-preparing .card-head{border-top-color:#6b7280 !important}
+.card.status-closed .card-head{border-top-color:#374151 !important}
+.status-preparing .status-bar{
+  background:#f3f4f6 !important;
+  color:#374151 !important;
+}
+.status-closed .status-bar{
+  background:#e5e7eb !important;
+  color:#111827 !important;
+}
+.status-preparing .progress,
+.status-closed .progress{
+  display:none !important;
+}
+.status-preparing .status-bar .status-text::before,
+.status-closed .status-bar .status-text::before{
+  animation:none !important;
+  box-shadow:none !important;
+}
+.status-preparing .status-bar .status-text::before{
+  background:#6b7280 !important;
+}
+.status-closed .status-bar .status-text::before{
+  background:#374151 !important;
+}
+
+
+/* === FINAL MASTER STATE OVERRIDE === */
+.card.status-preparing .card-head{border-top-color:#6b7280 !important}
+.card.status-closed .card-head{border-top-color:#374151 !important}
+
+.status-preparing .status-bar{
+  background:#f3f4f6 !important;
+  color:#374151 !important;
+}
+.status-closed .status-bar{
+  background:#e5e7eb !important;
+  color:#111827 !important;
+}
+.status-preparing .progress,
+.status-closed .progress{
+  display:none !important;
+}
+.status-preparing .status-subline,
+.status-closed .status-subline{
+  display:none !important;
+}
+.status-preparing .status-bar .status-text::before,
+.status-closed .status-bar .status-text::before{
+  animation:none !important;
+  box-shadow:none !important;
+}
+.status-preparing .status-bar .status-text::before{
+  background:#6b7280 !important;
+}
+.status-closed .status-bar .status-text::before{
+  background:#374151 !important;
+}
+
+
+/* === FINAL UX POLISH: PREPARING/CLOSED SHOW SINGLE MESSAGE ONLY === */
+.status-preparing .status-bar,
+.status-closed .status-bar{
+  display:none !important;
+}
+.status-preparing .apply-wrap,
+.status-closed .apply-wrap{
+  padding-top:0 !important;
+}
+
+
+/* === REVISED FILTER SYSTEM: COURSE STATE + CAPACITY === */
+.controls-revised{
+  grid-template-columns:1fr 190px 190px;
+}
+
+@media(max-width:860px){
+  .controls-revised{
+    grid-template-columns:1fr 1fr;
+  }
+  .controls-revised .search{
+    grid-column:1 / -1;
+  }
+}
+
+@media(max-width:520px){
+  .controls-revised{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .controls-revised .search,
+  .controls-revised .select{
+    padding:13px 14px;
+    border-radius:16px;
+    font-size:15px;
+  }
+}
+
+
+/* === PROGRESS BAR COLOR FOLLOWS SUB STATUS === */
+.card.sub-normal .progress > div,
+.card:not(.sub-near):not(.sub-full):not(.sub-overflow) .progress > div{
+  background:var(--green);
+}
+
+.card.sub-near .progress > div{
+  background:var(--orange) !important;
+}
+
+.card.sub-full .progress > div{
+  background:var(--red) !important;
+}
+
+.card.sub-overflow .progress > div{
+  background:#7c3aed !important;
+}
+
 </style>
 </head>
 <body>
@@ -1082,13 +1338,24 @@ small {
   </aside>
 </div>
   </section>
-<section class="controls">
+
+<div class="global-process-note">
+* ข้อมูลเป็นจำนวนผู้สมัครผ่านระบบออนไลน์ และอาจมีการเปลี่ยนแปลงหลังการตรวจสอบและวันรายงานตัว
+</div>
+
+<section class="controls controls-revised">
     <input id="search" class="search" type="search" placeholder="🔍 ค้นหาวิชา เช่น นวดไทย / คอมพิวเตอร์ / เสริมสวย">
-    <select id="statusFilter" class="select">
-      <option value="all">ทุกสถานะ</option>
-      <option value="ok">เปิดรับสมัคร</option>
-      <option value="near">มีผู้สมัครจำนวนมาก</option>
-      <option value="full">มีผู้สมัครครบตามจำนวน</option>
+    <select id="courseStateFilter" class="select">
+      <option value="all">ทุกสถานะหลักสูตร</option>
+      <option value="open">เปิดรับสมัคร</option>
+      <option value="preparing">เตรียมเปิดสอน</option>
+      <option value="closed">ปิดรับสมัครแล้ว</option>
+    </select>
+    <select id="capacityFilter" class="select">
+      <option value="all">ทุกระดับจำนวน</option>
+      <option value="normal">จำนวนปกติ</option>
+      <option value="near">ผู้สมัครจำนวนมาก</option>
+      <option value="full">ครบตามจำนวน</option>
       <option value="overflow">สมัครเกินจำนวน</option>
     </select>
   </section>
@@ -1141,7 +1408,8 @@ const REFRESH_INTERVAL_MS = 30000;
 
 const app = document.getElementById("app");
 const search = document.getElementById("search");
-const statusFilter = document.getElementById("statusFilter");
+const courseStateFilter = document.getElementById("courseStateFilter");
+const capacityFilter = document.getElementById("capacityFilter");
 
 function n(value){
   const num = Number(String(value ?? "").replace(/,/g,"").trim());
@@ -1178,31 +1446,109 @@ function getSeatMetric(row){
   return {value: getLeft(row), label: "ที่นั่งคงเหลือ", className: "metric-left"};
 }
 
-function getStatus(row){
-  const cap = n(row.cap ?? row["จำนวนที่รับ"]);
-  const reg = n(row.reg ?? row["สมัครแล้ว"]);
-  const left = Math.max(0, cap - reg);
-  const pct = cap > 0 ? (reg / cap) * 100 : 0;
 
-  // หลักตัดสินสถานะใช้ตัวเลขจริงเป็นหลัก เพื่อให้ filter ไม่เพี้ยน
-  // 1) สมัครเกินจำนวน: สมัครแล้ว > จำนวนรับ
+
+function getField(item, key){
+  if(!item) return "";
+  if(Object.prototype.hasOwnProperty.call(item,key)) return item[key];
+  const target = String(key).trim().toLowerCase();
+  for(const k in item){
+    if(String(k).trim().toLowerCase() === target){
+      return item[k];
+    }
+  }
+  return "";
+}
+
+function getCourseState(item){
+  return String(getField(item,"courseState") || "open").trim().toLowerCase();
+}
+
+function getFormUrl(item){
+  return String(
+    getField(item,"formUrl") ||
+    getField(item,"formURL") ||
+    getField(item,"form_url") ||
+    getField(item,"googleForm") ||
+    getField(item,"googleFormUrl") ||
+    ""
+  ).trim();
+}
+
+function isFormEnabled(item){
+  const raw = String(
+    getField(item,"formEnabled") ||
+    getField(item,"form_enable") ||
+    getField(item,"enabled") ||
+    ""
+  ).trim().toLowerCase();
+
+  return ["true","1","yes","y","enable","enabled","open","เปิด","ใช่"].includes(raw);
+}
+
+function buildApplyButton(item, st){
+  const courseState = getCourseState(item);
+  const formUrl = getFormUrl(item);
+  const enabled = isFormEnabled(item);
+
+  if(courseState === "preparing"){
+    return `<div class="apply-wrap"><button class="apply-btn disabled" type="button" disabled>🛠 อยู่ระหว่างเตรียมเปิดสอน</button></div>`;
+  }
+
+  if(courseState === "closed"){
+    return `<div class="apply-wrap"><button class="apply-btn disabled" type="button" disabled>⛔ ปิดรับสมัครแล้ว</button></div>`;
+  }
+
+  if(formUrl && enabled){
+    return `<div class="apply-wrap"><a class="apply-btn open" href="${formUrl}" target="_blank" rel="noopener noreferrer">✨ สมัครเรียน</a></div>`;
+  }
+
+  return `<div class="apply-wrap"><button class="apply-btn disabled" type="button" disabled>⚪ ยังไม่เปิดลิงก์สมัคร</button></div>`;
+}
+
+
+function getMasterStatus(item){
+  const courseState = getCourseState(item);
+  if(courseState === "preparing"){
+    return {key:"preparing", label:"อยู่ระหว่างเตรียมเปิดสอน", pctText:""};
+  }
+  if(courseState === "closed"){
+    return {key:"closed", label:"ปิดรับสมัครแล้ว", pctText:""};
+  }
+  return {key:"ok", label:"กำลังเปิดรับสมัคร", pctText:null};
+}
+
+function getSubStatus(reg, cap){
   if(cap > 0 && reg > cap){
-    return {key:"overflow", label:"สมัครเกินจำนวน"};
+    return {key:"overflow", label:"มีผู้สมัครเกินจำนวน", icon:"📌"};
+  }
+  if(cap > 0 && reg >= cap){
+    return {key:"full", label:"มีผู้สมัครครบตามจำนวน", icon:"🔴"};
+  }
+  const ratio = cap > 0 ? (reg / cap) * 100 : 0;
+  if(ratio >= 70){
+    return {key:"near", label:"เหลือที่นั่งจำนวนจำกัด", icon:"🟠"};
+  }
+  return null;
+}
+
+function buildSubStatusLine(sub){
+  if(!sub) return `<div class="status-subline is-hidden"></div>`;
+  return `<div class="status-subline ${sub.key}"><span>${sub.icon}</span><span>${sub.label}</span></div>`;
+}
+
+function getStatus(row){
+  const state = getCourseState(row);
+
+  if(state === "preparing"){
+    return {key:"preparing", label:"อยู่ระหว่างเตรียมเปิดสอน", pctText:""};
   }
 
-  // 2) ครบตามจำนวน: สมัครแล้ว = จำนวนรับ เท่านั้น
-  // ป้องกันกรณี สมัคร 0 / คงเหลือ 0 ถูกจัดเป็นเต็มผิดพลาด
-  if(cap > 0 && reg === cap){
-    return {key:"full", label:"มีผู้สมัครครบตามจำนวน"};
+  if(state === "closed"){
+    return {key:"closed", label:"ปิดรับสมัครแล้ว", pctText:""};
   }
 
-  // 3) มีผู้สมัครจำนวนมาก: ยังไม่เต็ม แต่ถึง 80% หรือเหลือไม่เกิน 3 ที่นั่ง
-  if(cap > 0 && reg > 0 && reg < cap && (pct >= 80 || left <= 3)){
-    return {key:"near", label:"มีผู้สมัครจำนวนมาก"};
-  }
-
-  // 4) ค่าเริ่มต้น: เปิดรับสมัคร
-  return {key:"ok", label:"กำลังเปิดรับสมัคร"};
+  return {key:"ok", label:"กำลังเปิดรับสมัคร", pctText:null};
 }
 
 function normalizeRow(row){
@@ -1217,7 +1563,10 @@ function normalizeRow(row){
     reserve: n(row.reserve ?? row["สำรอง"]),
     left: getLeft(row),
     status: text(row.status ?? row["สถานะ"]),
-    image: text(row.image ?? row.img ?? row["รูปภาพ"])
+    image: text(row.image ?? row.img ?? row["รูปภาพ"]),
+    courseState: text(row.courseState ?? row["courseState"] ?? row["สถานะหลักสูตร"]),
+    formUrl: text(row.formUrl ?? row["formUrl"] ?? row.formURL ?? row["formURL"] ?? row.form_url ?? row["form_url"] ?? row["ลิงก์สมัคร"] ?? row["ลิงก์ Google Form"]),
+    formEnabled: text(row.formEnabled ?? row["formEnabled"] ?? row.form_enable ?? row["form_enable"] ?? row["เปิดปุ่มสมัคร"])
   };
 }
 
@@ -1353,9 +1702,32 @@ async function loadData(){
   }
 }
 
+
+function getCourseStateFilterKey(row){
+  return getCourseState(row);
+}
+
+function getCapacityFilterKey(row){
+  const state = getCourseState(row);
+  if(state !== "open"){
+    return "inactive";
+  }
+
+  const cap = n(row.cap ?? row["จำนวนที่รับ"]);
+  const reg = n(row.reg ?? row["สมัครแล้ว"]);
+  const ratio = cap > 0 ? (reg / cap) * 100 : 0;
+
+  if(cap > 0 && reg > cap) return "overflow";
+  if(cap > 0 && reg >= cap) return "full";
+  if(ratio >= 70) return "near";
+  return "normal";
+}
+
+
 function render(){
   const q = search.value.trim().toLowerCase();
-  const statusValue = statusFilter.value;
+  const courseStateValue = courseStateFilter.value;
+  const capacityValue = capacityFilter.value;
 
   let baseRows = allData.filter(r => r.type === currentType);
 
@@ -1363,14 +1735,18 @@ function render(){
     return !q || r.subject.toLowerCase().includes(q) || r.batch.toLowerCase().includes(q);
   });
 
-  // Donut แสดงภาพรวมของประเภทวันเรียน + คำค้นหาปัจจุบัน โดยไม่ถูกบีบด้วยตัวกรองสถานะ
-  updateStatusDonut(baseRows);
-
   let rows = baseRows.filter(r => {
-    const status = getStatus(r).key;
-    return statusValue === "all" || status === statusValue;
+    const stateKey = getCourseStateFilterKey(r);
+    const capacityKey = getCapacityFilterKey(r);
+
+    const matchState = courseStateValue === "all" || stateKey === courseStateValue;
+    const matchCapacity = capacityValue === "all" || capacityKey === capacityValue;
+
+    return matchState && matchCapacity;
   });
 
+  // Donut และ KPI ต้องอ้างอิงรายการที่ผ่านตัวกรองแล้วเท่านั้น
+  updateStatusDonut(rows);
   updateKpis(rows);
 
   if(rows.length === 0){
@@ -1384,10 +1760,11 @@ function render(){
 function updateStatusDonut(rows){
   const total = rows.length;
   const counts = {
-    ok: rows.filter(r => getStatus(r).key === "ok").length,
-    near: rows.filter(r => getStatus(r).key === "near").length,
-    full: rows.filter(r => getStatus(r).key === "full").length,
-    overflow: rows.filter(r => getStatus(r).key === "overflow").length
+    ok: rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "normal").length,
+    near: rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "near").length,
+    full: rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "full").length,
+    overflow: rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "overflow").length,
+    inactive: rows.filter(r => getCourseState(r) !== "open").length
   };
 
   const donut = document.getElementById("statusDonut");
@@ -1413,7 +1790,8 @@ function updateStatusDonut(rows){
     ["ok", "#16a34a"],
     ["near", "#ea580c"],
     ["full", "#dc2626"],
-    ["overflow", "#7c3aed"]
+    ["overflow", "#7c3aed"],
+    ["inactive", "#9ca3af"]
   ];
 
   let start = 0;
@@ -1426,17 +1804,20 @@ function updateStatusDonut(rows){
     start = end;
   });
 
-  donut.style.background = `conic-gradient(${segments.join(", ")})`;
+  donut.style.background = segments.length
+    ? `conic-gradient(${segments.join(", ")})`
+    : "conic-gradient(#edf4f1 0% 100%)";
 }
+
 function updateKpis(rows){
   const cap = rows.reduce((s,r)=>s+r.cap,0);
   const reg = rows.reduce((s,r)=>s+r.reg,0);
   const left = rows.reduce((s,r)=>s+r.left,0);
 
-  const near = rows.filter(r => getStatus(r).key === "near").length;
-  const open = rows.filter(r => getStatus(r).key === "ok").length;
-  const full = rows.filter(r => getStatus(r).key === "full").length;
-  const overflow = rows.filter(r => getStatus(r).key === "overflow").length;
+  const near = rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "near").length;
+  const open = rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "normal").length;
+  const full = rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "full").length;
+  const overflow = rows.filter(r => getCourseState(r) === "open" && getCapacityFilterKey(r) === "overflow").length;
 
   document.getElementById("kpiCourses").textContent = rows.length;
   document.getElementById("kpiCap").textContent = cap;
@@ -1456,6 +1837,8 @@ function updateKpis(rows){
 
 function cardHtml(r){
   const st = getStatus(r);
+  const subStatus = getSubStatus(r.reg, r.cap);
+  const subClass = subStatus ? ` sub-${subStatus.key}` : " sub-normal";
   const pctActual = r.cap > 0 ? Math.round((r.reg / r.cap) * 100) : 0;
   const pctBar = Math.min(100, pctActual);
   const seatMetric = getSeatMetric(r);
@@ -1464,7 +1847,7 @@ function cardHtml(r){
     : `<div class="no-img">ศูนย์ฝึกอาชีพ<br>เขตจตุจักร</div>`;
 
   return `
-    <article class="card status-${st.key}">
+    <article class="card status-${st.key}${subClass}">
       ${img}
       <div class="card-head">
         <div class="badges">
@@ -1485,9 +1868,10 @@ function cardHtml(r){
       </div>
       <div class="status-bar">
         <span class="status-text">${st.label}</span>
-        <span>${pctActual}%</span>
+        <span>${st.pctText !== "" ? pctActual + "%" : ""}</span>
       </div>
-      <div class="card-process-note">ข้อมูลเป็นจำนวนผู้สมัครผ่านระบบออนไลน์ และอาจมีการเปลี่ยนแปลงหลังการตรวจสอบและวันรายงานตัว</div>
+      ${buildSubStatusLine(subStatus)}
+${buildApplyButton(r,st)}
       ${r.reserve ? `<div class="note">จำนวนสำรอง: ${r.reserve} คน</div>` : ""}
     </article>
   `;
@@ -1508,7 +1892,8 @@ document.querySelectorAll(".tab").forEach(btn => {
 });
 
 search.addEventListener("input", render);
-statusFilter.addEventListener("change", render);
+courseStateFilter.addEventListener("change", render);
+capacityFilter.addEventListener("change", render);
 document.getElementById("refreshBtn").addEventListener("click", loadData);
 
 
@@ -1524,6 +1909,21 @@ window.addEventListener("DOMContentLoaded", function(){
     console.log("[FONT CHECK] document.fonts available =", !!document.fonts);
   }catch(e){}
 });
+
+
+window.__checkFormFields = function(){
+  try{
+    const rows = Array.isArray(DATA) ? DATA : [];
+    return rows.slice(0,10).map(r => ({
+      subject:r.subject,
+      courseState:r.courseState,
+      formUrl:r.formUrl,
+      formEnabled:r.formEnabled
+    }));
+  }catch(e){
+    return String(e);
+  }
+};
 
 </script>
 
