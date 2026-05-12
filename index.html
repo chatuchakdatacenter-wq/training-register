@@ -1293,6 +1293,26 @@ color:#5b21b6;
   background:#7c3aed !important;
 }
 
+
+
+/* === PREPARING STATE : SOFT BMA NEUTRAL TONE === */
+.status-preparing{
+  background:linear-gradient(180deg,#f8fbf9 0%,#f1f7f4 100%) !important;
+  border-color:#d8e8e0 !important;
+}
+
+.status-preparing .status-chip,
+.status-preparing .apply-btn.disabled{
+  background:linear-gradient(135deg,#eef5f1,#ddebe4) !important;
+  color:#315247 !important;
+  border:1px solid #cfe3da !important;
+  box-shadow:none !important;
+}
+
+.status-preparing .status-subline{
+  color:#587166 !important;
+}
+
 </style>
 </head>
 <body>
@@ -1492,7 +1512,7 @@ function buildApplyButton(item, st){
   const enabled = isFormEnabled(item);
 
   if(courseState === "preparing"){
-    return `<div class="apply-wrap"><button class="apply-btn disabled" type="button" disabled>🛠 อยู่ระหว่างเตรียมเปิดสอน</button></div>`;
+    return `<div class="apply-wrap"><button class="apply-btn disabled" type="button" disabled>⏳ เปิดรับสมัครเร็ว ๆ นี้</button></div>`;
   }
 
   if(courseState === "closed"){
@@ -1510,7 +1530,7 @@ function buildApplyButton(item, st){
 function getMasterStatus(item){
   const courseState = getCourseState(item);
   if(courseState === "preparing"){
-    return {key:"preparing", label:"อยู่ระหว่างเตรียมเปิดสอน", pctText:""};
+    return {key:"preparing", label:"เปิดรับสมัครเร็ว ๆ นี้", pctText:""};
   }
   if(courseState === "closed"){
     return {key:"closed", label:"ปิดรับสมัครแล้ว", pctText:""};
@@ -1541,7 +1561,7 @@ function getStatus(row){
   const state = getCourseState(row);
 
   if(state === "preparing"){
-    return {key:"preparing", label:"อยู่ระหว่างเตรียมเปิดสอน", pctText:""};
+    return {key:"preparing", label:"เปิดรับสมัครเร็ว ๆ นี้", pctText:""};
   }
 
   if(state === "closed"){
