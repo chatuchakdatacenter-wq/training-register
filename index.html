@@ -1698,6 +1698,19 @@ color:#5b21b6;
   }
 }
 
+
+
+/* === FINAL PATCH: HIDE HERO OVERVIEW STATUS CARD ===
+   ซ่อนกล่อง "ภาพรวมสถานะรับสมัคร" ตามคำขอ เพื่อให้หน้าแรกบนมือถือกระชับขึ้น
+   ใช้วิธีซ่อนด้วย CSS เพื่อคง logic เดิมของระบบ/กราฟไว้ ไม่กระทบการคำนวณข้อมูล
+*/
+.hero-inner{
+  grid-template-columns:minmax(0,1fr) !important;
+}
+.hero-donut-card{
+  display:none !important;
+}
+
 </style>
 </head>
 <body>
