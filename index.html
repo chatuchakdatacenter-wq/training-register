@@ -2061,6 +2061,160 @@ color:#5b21b6;
   }
 }
 
+
+
+/* === FINAL PATCH : GOLD COURSE BORDER + MOBILE SMOOTHNESS ===
+   รวมคำขอ: กรอบแต่ละวิชาสีทองหนาขึ้น + ลดเอฟเฟกต์หนักเพื่อความสมูธบนมือถือ
+*/
+:root{
+  --course-gold:#c9a227;
+  --course-gold-light:#f3df9b;
+  --course-gold-soft:rgba(201,162,39,.24);
+  --course-gold-shadow:rgba(201,162,39,.18);
+}
+
+@media(max-width:720px){
+  html{
+    scroll-behavior:smooth;
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    background:#eaf2ee !important;
+    overscroll-behavior-y:contain;
+  }
+
+  .grid{
+    gap:20px !important;
+    padding-top:4px !important;
+  }
+
+  /* กรอบทองหลักของแต่ละวิชา */
+  .card{
+    border:3px solid var(--course-gold) !important;
+    border-radius:22px !important;
+    background:#ffffff !important;
+    box-shadow:
+      0 12px 24px rgba(15,64,48,.10),
+      0 4px 12px var(--course-gold-shadow),
+      0 0 0 1px rgba(255,255,255,.88) inset !important;
+    outline:1px solid rgba(255,255,255,.95) !important;
+    transform:translateZ(0);
+    backface-visibility:hidden;
+    contain:layout paint style;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+
+  .card:active{
+    transform:translateY(1px) scale(.997);
+    box-shadow:
+      0 8px 18px rgba(15,64,48,.10),
+      0 2px 8px rgba(201,162,39,.16) !important;
+  }
+
+  /* ลบเส้น accent สีสถานะด้านซ้ายเดิม เพื่อไม่ชนกับกรอบทอง */
+  .card::before{
+    display:none !important;
+  }
+
+  /* เส้นทองด้านในให้ดูชัด แต่ไม่แข็ง */
+  .card::after{
+    content:"";
+    position:absolute;
+    inset:4px;
+    border:1px solid rgba(243,223,155,.65);
+    border-radius:18px;
+    pointer-events:none;
+    box-shadow:none !important;
+    animation:none !important;
+  }
+
+  /* ไม่ให้สถานะ override สีกรอบทอง */
+  .card.status-ok,
+  .card.status-near,
+  .card.status-full,
+  .card.status-overflow,
+  .card.sub-near,
+  .card.sub-full,
+  .card.sub-overflow,
+  .card.status-preparing,
+  .card.status-closed{
+    border-color:var(--course-gold) !important;
+  }
+
+  /* รักษาเส้นสถานะไว้ที่หัวการ์ดแทน เพื่อยังอ่านสถานะได้ */
+  .card-head{
+    border-left:0 !important;
+    border-top:5px solid var(--bma) !important;
+    padding-left:12px !important;
+  }
+  .card.status-ok .card-head{border-top-color:var(--green) !important;}
+  .card.status-near .card-head,
+  .card.sub-near .card-head{border-top-color:var(--orange) !important;}
+  .card.status-full .card-head,
+  .card.sub-full .card-head{border-top-color:var(--red) !important;}
+  .card.status-overflow .card-head,
+  .card.sub-overflow .card-head{border-top-color:#7c3aed !important;}
+  .card.status-preparing .card-head{border-top-color:#8aa79b !important;}
+  .card.status-closed .card-head{border-top-color:#6b7280 !important;}
+
+  .course-img,
+  .no-img{
+    border-right:2px solid rgba(201,162,39,.38) !important;
+    transform:translateZ(0);
+  }
+
+  /* ปุ่มสมัครออนไลน์: ลูกศรชิดขวาขึ้น อ่านง่ายขึ้น */
+  .apply-btn,
+  .apply-btn.open.online-apply{
+    gap:10px !important;
+    padding:10px 58px 10px 16px !important;
+    transform:translateZ(0);
+    transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+  }
+  .apply-btn:active,
+  .apply-btn.open.online-apply:active{
+    transform:scale(.985) translateZ(0);
+    filter:brightness(.98);
+  }
+  .apply-arrow{
+    right:24px !important;
+    transform:translate(8px,-50%) !important;
+  }
+
+  /* ลด animation ที่ทำงานวนซ้ำ เพื่อให้เลื่อนหน้าได้สมูธขึ้นบนมือถือ */
+  .card.status-ok::after,
+  .card.sub-overflow::after,
+  .card.status-overflow::after{
+    animation:none !important;
+  }
+
+  .apply-btn.open.online-apply:before{
+    animation:applyShimmer 5.2s ease-in-out infinite !important;
+    opacity:.72;
+  }
+
+  .progress > div{
+    animation:none !important;
+    transition:width .22s ease !important;
+  }
+
+  .tab,
+  .refresh-btn,
+  .apply-btn{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+}
+
+@media(max-width:720px) and (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
