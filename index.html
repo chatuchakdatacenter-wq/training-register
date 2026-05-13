@@ -1964,6 +1964,103 @@ color:#5b21b6;
     animation:none !important;
   }
 }
+
+
+/* === FINAL MOBILE COURSE BORDER CLARITY PATCH ===
+   เพิ่มกรอบแยกแต่ละวิชาให้ชัดขึ้น และขยับลูกศรปุ่มสมัครออนไลน์ไปทางขวา
+*/
+@media(max-width:720px){
+  body{
+    background:#eaf2ee !important;
+  }
+
+  .grid{
+    gap:18px !important;
+    padding-top:2px !important;
+  }
+
+  .card{
+    border:2.4px solid #c8ddd4 !important;
+    border-radius:21px !important;
+    background:#ffffff !important;
+    box-shadow:
+      0 12px 28px rgba(15, 64, 48, .12),
+      0 3px 8px rgba(0, 92, 70, .07),
+      0 0 0 1px rgba(255,255,255,.9) inset !important;
+    outline:1px solid rgba(255,255,255,.95) !important;
+    margin-bottom:2px !important;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:6px;
+    background:var(--bma);
+    z-index:2;
+    opacity:.95;
+  }
+
+  .card.status-ok{
+    border-color:rgba(22,163,74,.48) !important;
+  }
+  .card.status-ok::before{background:var(--green) !important;}
+
+  .card.status-near,
+  .card.sub-near{
+    border-color:rgba(234,88,12,.50) !important;
+  }
+  .card.status-near::before,
+  .card.sub-near::before{background:var(--orange) !important;}
+
+  .card.status-full,
+  .card.sub-full{
+    border-color:rgba(220,38,38,.50) !important;
+  }
+  .card.status-full::before,
+  .card.sub-full::before{background:var(--red) !important;}
+
+  .card.sub-overflow,
+  .card.status-overflow{
+    border-color:rgba(124,58,237,.52) !important;
+  }
+  .card.sub-overflow::before,
+  .card.status-overflow::before{background:#7c3aed !important;}
+
+  .card.status-preparing{
+    border-color:rgba(107,128,118,.46) !important;
+  }
+  .card.status-preparing::before{background:#8aa79b !important;}
+
+  .card.status-closed{
+    border-color:rgba(107,114,128,.46) !important;
+  }
+  .card.status-closed::before{background:#6b7280 !important;}
+
+  .course-img,
+  .no-img{
+    border-right:2px solid rgba(0,92,70,.13) !important;
+  }
+
+  .card-head{
+    border-left:0 !important;
+    padding-left:12px !important;
+  }
+
+  .apply-btn,
+  .apply-btn.open.online-apply{
+    gap:10px !important;
+    padding:10px 52px 10px 16px !important;
+  }
+
+  .apply-arrow{
+    right:22px !important;
+    transform:translate(5px,-50%) !important;
+  }
+}
+
 </style>
 </head>
 <body>
