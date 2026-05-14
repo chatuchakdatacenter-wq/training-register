@@ -452,15 +452,28 @@ textarea::placeholder {
 
 
 /* === EMBEDDED SAO CHINGCHA FONT === */
-@font-face {
+
+@font-face{
   font-family:'SaoChingchaEmbedded';
   src:url('./fonts/SaoChingcha.otf') format('opentype');
-  font-display:swap;
-} format('opentype');
   font-weight:normal;
   font-style:normal;
-  font-display:swap;
+  font-display:block;
 }
+
+@font-face{
+  font-family:'SaoChingcha';
+  src:url('./fonts/SaoChingcha.otf') format('opentype');
+  font-weight:normal;
+  font-style:normal;
+  font-display:block;
+}
+
+:root{
+  --bma-font:'SaoChingchaEmbedded','SaoChingcha','Sao Chingcha','เสาชิงช้า','Sarabun','Tahoma',sans-serif !important;
+  --bma-font-embedded:'SaoChingchaEmbedded','SaoChingcha','Sao Chingcha','เสาชิงช้า','Sarabun','Tahoma',sans-serif !important;
+}
+
 
 :root {
   --bma-font-embedded:'SaoChingchaEmbedded','Sao Chingcha','SaoChingcha','เสาชิงช้า','BKKDraft5','Sarabun','Tahoma',sans-serif;
@@ -2384,6 +2397,24 @@ color:#5b21b6;
 }
 
 </style>
+
+<style>
+body,
+button,
+input,
+select,
+textarea,
+.card,
+.title,
+.subtitle,
+span,
+div,
+p,
+h1,h2,h3,h4,h5,h6{
+  font-family:var(--bma-font) !important;
+}
+</style>
+
 </head>
 <body>
 <main class="app">
